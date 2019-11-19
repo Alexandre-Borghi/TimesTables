@@ -1,17 +1,24 @@
-#include <SDL2/SDL.h>
 #include <stdio.h>
+#include <SDL2/SDL.h>
 
-int windowedWidth = 1280;
-int windowedHeight = 720;
-int fullscreenWidth = 1920;
-int fullscreenHeight = 1080;
+#include "Button.h"
+
+const int WINDOWED_WIDTH= 1280;
+const int WINDOWED_HEIGHT = 720;
+const int FULLSCREEN_WIDTH = 1920;
+const int FULLSCREEN_HEIGHT = 1080;
 
 
-void draw(SDL_Renderer* renderer)
+int nbPoints = 100;
+float mult = 2;
+
+double pi = 3.14159235;
+
+double min(int a, int b)
 {
-    
+    // Returns the smaller between a and b
+    return a < b ? a : b;
 }
-
 
 void toggleFullscreen(SDL_Window* window)
 {
@@ -20,8 +27,58 @@ void toggleFullscreen(SDL_Window* window)
     Uint32 fullscreenFlag = SDL_WINDOW_FULLSCREEN;
     int isFullscreen = SDL_GetWindowFlags(window) & fullscreenFlag;
     SDL_SetWindowFullscreen(window, isFullscreen ? 0 : fullscreenFlag);
-    SDL_SetWindowSize(window, isFullscreen ? windowedWidth : fullscreenWidth, isFullscreen ? windowedHeight : fullscreenHeight);
+    // SDL_SetWindowSize(window, isFullscreen ? WINDOWED_WIDTH : FULLSCREEN_WIDTH, isFullscreen ? WINDOWED_HEIGHT : FULLSCREEN_HEIGHT);
     // SDL_ShowCursor(isFullscreen);
+}
+
+
+void draw(SDL_Renderer* renderer)
+{
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+
+    double xOff = 355;
+    double yOff = 355;
+
+    // int* w;
+    // int* h;
+    // SDL_GetRendererOutputSize(renderer, w, h);
+
+    double r = 700 / 2;
+
+    // Drawing the outer circle
+    SDL_Point points[nbPoints];
+    // memset(points, 0, nbPoints * sizeof(SDL_Point));
+
+    for (int i = 0; i <= nbPoints; i++)
+    {
+        double theta = (pi * 2 / nbPoints) * i;
+
+        SDL_Point temp;
+        temp.x = r * cos(theta) + xOff;
+        temp.y = r * sin(theta) + yOff;
+
+        points[i] = temp;
+    }
+
+    // Adding the last point to close the circle
+    points[nbPoints + 1] = points[0];
+
+    SDL_RenderDrawLines(renderer, points, nbPoints + 1);
+
+    for (int i = 0; i < nbPoints; i++)
+    {
+        double theta = (pi * 2 / nbPoints) * i;
+
+        double x1 = r * cos(theta) + xOff;
+        double y1 = r * sin(theta) + yOff;
+
+        theta = (pi * 2 / nbPoints) * i * mult;
+
+        double x2 = r * cos(theta) + xOff;
+        double y2 = r * sin(theta) + yOff;
+
+        SDL_RenderDrawLine(renderer, (int)x1, (int)y1, (int)x2, (int)y2);
+    }
 }
 
 
@@ -37,7 +94,7 @@ int main (int argc, char* args[])
         return 0;
     }
 
-    window = SDL_CreateWindow("Times Tables", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, windowedWidth, windowedHeight, SDL_WINDOW_SHOWN);
+    window = SDL_CreateWindow("Times Tables", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WINDOWED_WIDTH, WINDOWED_HEIGHT, SDL_WINDOW_SHOWN);
 
     if (window == NULL)
     {
@@ -80,6 +137,8 @@ int main (int argc, char* args[])
 
         // Updating the window
         SDL_RenderPresent(renderer);
+
+        mult += 0.0005;
     }
 
     SDL_DestroyWindow(window);

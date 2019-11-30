@@ -3,8 +3,6 @@
 
 #include "App.h"
 
-#include "Button.h"
-
 void toggleFullscreen (SDL_Window* window)
 {
     // https://stackoverflow.com/questions/30629106/sdl2-how-to-properly-toggle-fullscreen
@@ -44,6 +42,16 @@ int main (int argc, char* args[])
 
                 default:
                     break;
+            }
+
+            for (int i = 0; i < BUTTON_COUNT; i++)
+            {
+                EventButton(&app->buttons[i], &event);
+            }
+
+            for (int i = 0; i < SLIDER_COUNT; i++)
+            {
+                EventSlider(&app->sliders[i], &event);
             }
         }
 

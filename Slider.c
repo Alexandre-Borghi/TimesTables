@@ -14,39 +14,37 @@ static float constrain(float val, float min, float max)
     return val;
 }
 
-Slider CreateSlider(int x, int y, int w, int h, 
+void CreateSlider(
+    Slider* s,
+    int x, int y, int w, int h, 
     float minVal_, float maxVal_, double* value_,
     SDL_Color barColor_,
     SDL_Color fillColor_, SDL_Color hoverColor_, SDL_Color pressColor_
     )
 {
-    Slider t;
+    s->minVal = minVal_;
+    s->maxVal = maxVal_;
+    s->value = value_;
 
-    t.minVal = minVal_;
-    t.maxVal = maxVal_;
-    t.value = value_;
+    s->bar.x = x;
+    s->bar.y = y;
+    s->bar.w = w;
+    s->bar.h = h;
 
-    t.bar.x = x;
-    t.bar.y = y;
-    t.bar.w = w;
-    t.bar.h = h;
+    s->handle.w = h;
+    s->handle.h = 2 * h;
+    s->handle.x = map(*s->value, s->minVal, s->maxVal, x, x + s->bar.w);
+    s->handle.y = y - s->handle.h / 4;
 
-    t.handle.w = h;
-    t.handle.h = 2 * h;
-    t.handle.x = map(*t.value, t.minVal, t.maxVal, x, x + t.bar.w);
-    t.handle.y = y - t.handle.h / 4;
+    s->barColor = barColor_;
 
-    t.barColor = barColor_;
+    s->handleColor = fillColor_;
+    s->hoverColor = hoverColor_;
+    s->pressColor = pressColor_;
 
-    t.handleColor = fillColor_;
-    t.hoverColor = hoverColor_;
-    t.pressColor = pressColor_;
-
-    t.isHovered = 0;
-    t.isPressed = 0;
-    t.callCallback = 0;
-
-    return t;
+    s->isHovered = 0;
+    s->isPressed = 0;
+    s->callCallback = 0;
 }
 
 void DrawSlider(App* app, Slider* slider)

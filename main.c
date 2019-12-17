@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 
 #include "App.h"
 
@@ -18,10 +19,10 @@ void toggleFullscreen (SDL_Window* window)
 int main (int argc, char* args[])
 {
     struct App* app = malloc(sizeof(struct App));
-    CreateApp(app, 1280, 720, 1280, 720, 100, 2);
-    InitApp(app, "Times Tables Drawing");
 
-    int quit = 0;
+    CreateApp(app, "Times Tables Drawing", 1280, 720, 1280, 720, 100, 2);
+
+    int quit = 0;     	
 
     while (!quit)
     {
@@ -34,10 +35,6 @@ int main (int argc, char* args[])
             {
                 case SDL_QUIT:
                     quit = 1;
-                    break;
-                
-                case SDL_KEYDOWN:
-                    if (event.key.keysym.sym == SDLK_F1) toggleFullscreen(app->window); break;
                     break;
 
                 default:
@@ -62,13 +59,19 @@ int main (int argc, char* args[])
         // Drawing
         DrawApp(app);
 
+        ChangeTextButton(app, &app->buttons[0], "Chouquettes !");
+   
         // Updating the window
         SDL_RenderPresent(app->renderer);
 
         app->mult += 0.0005;
     }
 
-    SDL_DestroyWindow(app->window);
+    DestroyApp(app);
+
+    free(app);
+
+    TTF_Quit();
 
     SDL_Quit();
 

@@ -2,7 +2,7 @@
 #include "Slider.h"
 #include <SDL2/SDL_ttf.h>
 
-void CreateApp (struct App* app, char* title, int wW, int wH, int fW, int fH, int nbPoints_, double mult_)
+void CreateApp (App* app, char* title, int wW, int wH, int fW, int fH, int nbPoints_, double mult_)
 {
     /*
     This function helps to create an App struct
@@ -60,13 +60,13 @@ void CreateApp (struct App* app, char* title, int wW, int wH, int fW, int fH, in
     SDL_Color barColor = { 250, 250, 250, 255 };
     SDL_Color textColor = { 0, 0, 0, 255 };
 
-    app->buttons = calloc(BUTTON_COUNT, sizeof(struct Button));
+    app->buttons = calloc(BUTTON_COUNT, sizeof(Button));
 
     CreateButton(app, &app->buttons[0], 800, 50, 430, 50, "Reset", borderColor, fillColor, hoverColor, pressColor, textColor);
     app->sliders[0] = CreateSlider(800, 150, 430, 20, 2, 100, &app->mult, barColor, fillColor, hoverColor, pressColor);
 }
 
-void DrawApp (struct App* app)
+void DrawApp (App* app)
 {
     SDL_SetRenderDrawColor(app->renderer, 255, 255, 255, 20);
 
@@ -124,7 +124,7 @@ void DrawApp (struct App* app)
     }
 }
 
-void DestroyApp (struct App* app)
+void DestroyApp (App* app)
 {
     for (int i = 0; i < BUTTON_COUNT; i++)
     {

@@ -3,9 +3,9 @@
 
 #include <SDL2/SDL.h>
 
-struct App;
+typedef struct App App;
 
-struct Slider
+typedef struct Slider
 {
     SDL_Color barColor;
     SDL_Color handleColor;
@@ -22,14 +22,14 @@ struct Slider
     float minVal;
     float maxVal;
     double* value;
-};
+} Slider;
 
-struct Slider CreateSlider(int x, int y, int w, int h, 
+Slider CreateSlider(int x, int y, int w, int h, 
     float minVal_, float maxVal_, double* value_,
     SDL_Color barColor_,
     SDL_Color fillColor_, SDL_Color hoverColor_, SDL_Color pressColor
     );
-void DrawSlider(struct App* app, struct Slider* slider);
-void EventSlider (struct Slider* slider, SDL_Event* e);
+void DrawSlider(App* app, Slider* slider);
+void EventSlider (Slider* slider, SDL_Event* e);
 
 #endif

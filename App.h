@@ -12,7 +12,7 @@
 #define BUTTON_COUNT 1
 #define SLIDER_COUNT 1
 
-struct App
+typedef struct App
 {
     // SDL Variables
 
@@ -33,12 +33,12 @@ struct App
 
     // GUI Variables
 
-    struct Button* buttons;
-    struct Slider sliders[SLIDER_COUNT];
-};
+    Button* buttons;
+    Slider sliders[SLIDER_COUNT];
+} App;
 
-void CreateApp (struct App* app, char* title, int wW, int wH, int fW, int fH, int nbPoints_, double mult_);
-void DrawApp (struct App* app);
-void DestroyApp (struct App* app);
+void CreateApp (App* app, char* title, int wW, int wH, int fW, int fH, int nbPoints_, double mult_);
+void DrawApp (App* app);
+void DestroyApp (App* app);
 
 #endif

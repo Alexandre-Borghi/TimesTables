@@ -18,7 +18,7 @@ void toggleFullscreen (SDL_Window* window)
 
 int main (int argc, char* args[])
 {
-    struct App* app = malloc(sizeof(struct App));
+    App* app = malloc(sizeof(App));
 
     CreateApp(app, "Times Tables Drawing", 1280, 720, 1280, 720, 100, 2);
 
@@ -58,8 +58,6 @@ int main (int argc, char* args[])
         
         // Drawing
         DrawApp(app);
-
-        ChangeTextButton(app, &app->buttons[0], "Chouquettes !");
    
         // Updating the window
         SDL_RenderPresent(app->renderer);

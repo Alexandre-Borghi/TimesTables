@@ -14,13 +14,13 @@ static float constrain(float val, float min, float max)
     return val;
 }
 
-struct Slider CreateSlider(int x, int y, int w, int h, 
+Slider CreateSlider(int x, int y, int w, int h, 
     float minVal_, float maxVal_, double* value_,
     SDL_Color barColor_,
     SDL_Color fillColor_, SDL_Color hoverColor_, SDL_Color pressColor_
     )
 {
-    struct Slider t;
+    Slider t;
 
     t.minVal = minVal_;
     t.maxVal = maxVal_;
@@ -49,7 +49,7 @@ struct Slider CreateSlider(int x, int y, int w, int h,
     return t;
 }
 
-void DrawSlider(struct App* app, struct Slider* slider)
+void DrawSlider(App* app, Slider* slider)
 {
     slider->handle.x = (double)constrain(map(*slider->value, slider->minVal, slider->maxVal, slider->bar.x - slider->handle.w / 2, slider->bar.x + slider->bar.w - slider->handle.w / 2), slider->bar.x - slider->handle.w / 2, slider->bar.x + slider->bar.w - slider->handle.w / 2);
 
@@ -85,7 +85,7 @@ static int IsPointInRect(Sint32 x, Sint32 y, SDL_Rect* rect)
     return 0;
 }
 
-void EventSlider (struct Slider* slider, SDL_Event* e)
+void EventSlider (Slider* slider, SDL_Event* e)
 {
     // Slider hovered
 

@@ -3,7 +3,7 @@
 
 #include <SDL2/SDL.h>
 
-struct Button
+typedef struct Button
 {
     // Geometry
 
@@ -27,22 +27,22 @@ struct Button
 
     SDL_Texture* textTexture;
     SDL_Rect* textRect;
-};
+} Button;
 
-struct App;
+typedef struct App App;
 
 void CreateButton (
-    struct App* app,
-    struct Button* button,
+    App* app,
+    Button* button,
     int x_, int y_, int w_, int h_, 
     char* string_,
     SDL_Color borderColor_, 
     SDL_Color fillColor_, SDL_Color hoverColor_, SDL_Color pressColor,
     SDL_Color textColor_
     );
-void DrawButton (struct App* app, struct Button* button);
-void EventButton (struct Button* button, SDL_Event* event);
-void ChangeTextButton (struct App* app, struct Button* b, char* newText);
-void DestroyButton (struct Button* button);
+void DrawButton (App* app, Button* button);
+void EventButton (Button* button, SDL_Event* event);
+void ChangeTextButton (App* app, Button* b, char* newText);
+void DestroyButton (Button* button);
 
 #endif

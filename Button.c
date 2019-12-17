@@ -4,8 +4,8 @@
 #include "SDL2/SDL_ttf.h"
 
 void CreateButton (
-    struct App* app,
-    struct Button* b,
+    App* app,
+    Button* b,
     int x_, int y_, int w_, int h_, 
     char* string_,
     SDL_Color borderColor_, 
@@ -58,7 +58,7 @@ void CreateButton (
     b->textRect->y = b->rect.y + (b->rect.h / 2) - (b->textRect->h / 2);
 }
 
-void DrawButton (struct App* app, struct Button* button)
+void DrawButton (App* app, Button* button)
 {
     // TODO: Callback function
 
@@ -107,7 +107,7 @@ static int IsPointInRect(Sint32 x, Sint32 y, SDL_Rect* rect)
     return 0;
 }
 
-void EventButton (struct Button* button, SDL_Event* e)
+void EventButton (Button* button, SDL_Event* e)
 {
     // Button hovered
 
@@ -138,7 +138,7 @@ void EventButton (struct Button* button, SDL_Event* e)
     }
 }
 
-void ChangeTextButton (struct App* app, struct Button* b, char* newText)
+void ChangeTextButton (App* app, Button* b, char* newText)
 {
     TTF_Font* font = TTF_OpenFont("./font.ttf", 25);
 
@@ -163,7 +163,7 @@ void ChangeTextButton (struct App* app, struct Button* b, char* newText)
     b->textRect->y = b->rect.y + (b->rect.h / 2) - (b->textRect->h / 2);
 }
 
-void DestroyButton (struct Button* button)
+void DestroyButton (Button* button)
 {
     SDL_DestroyTexture(button->textTexture);
 

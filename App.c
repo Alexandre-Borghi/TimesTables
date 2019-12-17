@@ -1,7 +1,8 @@
 #include "App.h"
 #include "Slider.h"
+#include <SDL2/SDL_ttf.h>
 
-void CreateApp (struct App* app, int wW, int wH, int fW, int fH, int nbPoints_, double mult_)
+void CreateApp (struct App* app, char* title, int wW, int wH, int fW, int fH, int nbPoints_, double mult_)
 {
     /*
     This function helps to create an App struct
@@ -17,57 +18,19 @@ void CreateApp (struct App* app, int wW, int wH, int fW, int fH, int nbPoints_, 
     int mult_ : Number used to draw the pattern
     */
 
-   app->windowedWidth = wW;
-   app->windowedHeight = wH;
-   app->fullscreenWidth = fW;
-   app->fullscreenHeight = fH;
+    app->windowedWidth = wW;
+    app->windowedHeight = wH;
+    app->fullscreenWidth = fW;
+    app->fullscreenHeight = fH;
 
-   app->nbPoints = nbPoints_;
-   app->mult = mult_;
+    app->nbPoints = nbPoints_;
+    app->mult = mult_;
 
-   // GUI Creation
-
-   SDL_Color borderColor;
-   borderColor.r = 245;
-   borderColor.g = 245;
-   borderColor.b = 245;
-   borderColor.a = 255;
-
-   SDL_Color fillColor;
-   fillColor.r = 120;
-   fillColor.g = 120;
-   fillColor.b = 120;
-   fillColor.a = 255;
-
-   SDL_Color hoverColor;
-   hoverColor.r = 190;
-   hoverColor.g = 190;
-   hoverColor.b = 190;
-   hoverColor.a = 255;
-
-   SDL_Color pressColor;
-   pressColor.r = 230;
-   pressColor.g = 230;
-   pressColor.b = 230;
-   pressColor.a = 255;
-
-   SDL_Color barColor;
-   barColor.r = 250;
-   barColor.g = 250;
-   barColor.b = 250;
-   barColor.a = 255;
-
-   app->buttons[0] = CreateButton(800, 50, 430, 50, "BUTTON", borderColor, fillColor, hoverColor, pressColor);
-   app->sliders[0] = CreateSlider(800, 150, 430, 20, 2, 100, &app->mult, barColor, fillColor, hoverColor, pressColor);
-}
-
-int InitApp (struct App* app, const char* title)
-{
     // SDL2 and Window intialization
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
         printf("ERROR: Couldn't initialize SDL2\n");
-        return 0;
+        return;
     }
 
     app->window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, app->windowedWidth, app->windowedHeight, SDL_WINDOW_SHOWN);
@@ -75,10 +38,32 @@ int InitApp (struct App* app, const char* title)
     if (app->window == NULL) 
     {
         printf("ERROR: Couldn't create the window");
-        return 0;
+        return;
     }
 
     app->renderer = SDL_CreateRenderer(app->window, -1, 0);
+
+    // SDL_ttf initialization
+
+    if (TTF_Init() < 0)
+    {
+        printf("TTF_Init: %s\n", TTF_GetError());
+        exit(2);
+    }
+
+    // GUI Creation
+
+    SDL_Color borderColor = { 245, 245, 245, 255 };
+    SDL_Color fillColor = { 120, 120, 120, 255 };
+    SDL_Color hoverColor = { 190, 190, 190, 255 };
+    SDL_Color pressColor = { 230, 230, 230, 255 };
+    SDL_Color barColor = { 250, 250, 250, 255 };
+    SDL_Color textColor = { 0, 0, 0, 255 };
+
+    app->buttons = calloc(BUTTON_COUNT, sizeof(struct Button));
+
+    CreateButton(app, &app->buttons[0], 800, 50, 430, 50, "Reset", borderColor, fillColor, hoverColor, pressColor, textColor);
+    app->sliders[0] = CreateSlider(800, 150, 430, 20, 2, 100, &app->mult, barColor, fillColor, hoverColor, pressColor);
 }
 
 void DrawApp (struct App* app)
@@ -128,13 +113,26 @@ void DrawApp (struct App* app)
 
     // GUI Drawing
 
-    for (int i = 0; i < BUTTON_COUNT; i++)
-    {
-        DrawButton(app, &(app->buttons[i]));
-    }
-
     for (int i = 0; i < SLIDER_COUNT; i++)
     {
         DrawSlider(app, &(app->sliders[i]));
     }
+
+    for (int i = 0; i < BUTTON_COUNT; i++)
+    {
+        DrawButton(app, &(app->buttons[i]));
+    }
+}
+
+void DestroyApp (struct App* app)
+{
+    for (int i = 0; i < BUTTON_COUNT; i++)
+    {
+        DestroyButton(&(app->buttons[i]));
+    }
+
+    free(app->buttons);
+
+    SDL_DestroyRenderer(app->renderer);
+    SDL_DestroyWindow(app->window);
 }

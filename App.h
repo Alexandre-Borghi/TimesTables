@@ -33,12 +33,12 @@ struct App
 
     // GUI Variables
 
-    struct Button buttons[BUTTON_COUNT];
+    struct Button* buttons;
     struct Slider sliders[SLIDER_COUNT];
 };
 
-void CreateApp (struct App* app, int wW, int wH, int fW, int fH, int nbPoints_, double mult_);
-int InitApp (struct App* app, const char* title);
+void CreateApp (struct App* app, char* title, int wW, int wH, int fW, int fH, int nbPoints_, double mult_);
 void DrawApp (struct App* app);
+void DestroyApp (struct App* app);
 
 #endif

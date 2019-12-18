@@ -5,7 +5,7 @@
 
 typedef struct App App;
 
-typedef struct Slider
+typedef struct SliderDouble
 {
     SDL_Color barColor;
     SDL_Color handleColor;
@@ -19,19 +19,19 @@ typedef struct Slider
     int isPressed;
     int callCallback;
     
-    float minVal;
-    float maxVal;
+    double minVal;
+    double maxVal;
     double* value;
-} Slider;
+} SliderDouble;
 
-void CreateSlider(
-    Slider* s,
+void CreateSliderDouble(
+    SliderDouble* s,
     int x, int y, int w, int h, 
-    float minVal_, float maxVal_, double* value_,
+    double minVal_, double maxVal_, double* value_,
     SDL_Color barColor_,
     SDL_Color fillColor_, SDL_Color hoverColor_, SDL_Color pressColor
     );
-void DrawSlider(App* app, Slider* s);
-void EventSlider (Slider* s, SDL_Event* e);
+void DrawSlider(App* app, SliderDouble* s);
+void EventSlider (SliderDouble* s, SDL_Event* e);
 
 #endif

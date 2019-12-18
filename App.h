@@ -34,7 +34,7 @@ typedef struct App
     // GUI Variables
 
     Button* buttons;
-    Slider* sliders;
+    SliderDouble* sliders;
 } App;
 
 void CreateApp (App* app, char* title, int wW, int wH, int fW, int fH, int nbPoints_, double mult_);

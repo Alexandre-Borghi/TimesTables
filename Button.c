@@ -10,7 +10,8 @@ void CreateButton (
     char* string_,
     SDL_Color borderColor_, 
     SDL_Color fillColor_, SDL_Color hoverColor_, SDL_Color pressColor_,
-    SDL_Color textColor_
+    SDL_Color textColor_,
+    void (callback_)(App*)
     )
 {
     // Geometry
@@ -31,6 +32,8 @@ void CreateButton (
     // Control
 
     b->isPressed = 0;
+
+    b->callback = callback_;
 
     // Text
 
@@ -65,7 +68,7 @@ void DrawButton (App* app, Button* button)
     if (button->callCallback == 1)
     {
         button->callCallback = 0;
-        app->mult = 2;
+        button->callback(app);
     }
 
     // Drawing

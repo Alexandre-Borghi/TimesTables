@@ -3,6 +3,8 @@
 
 #include <SDL2/SDL.h>
 
+typedef struct App App;
+
 typedef struct Button
 {
     // Geometry
@@ -23,13 +25,14 @@ typedef struct Button
     int isPressed;
     int callCallback;
 
+    void (*callback)(App*);
+
     // Text
 
     SDL_Texture* textTexture;
     SDL_Rect* textRect;
 } Button;
 
-typedef struct App App;
 
 void CreateButton (
     App* app,
@@ -38,7 +41,8 @@ void CreateButton (
     char* string_,
     SDL_Color borderColor_, 
     SDL_Color fillColor_, SDL_Color hoverColor_, SDL_Color pressColor,
-    SDL_Color textColor_
+    SDL_Color textColor_,
+    void (callback_)(App*)
     );
 void DrawButton (App* app, Button* button);
 void EventButton (Button* button, SDL_Event* event);

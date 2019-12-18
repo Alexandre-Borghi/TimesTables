@@ -96,7 +96,6 @@ void DrawButton (App* app, Button* button)
     // Drawing text
 
     SDL_RenderCopy(app->renderer, button->textTexture, NULL, button->textRect);
-    SDL_RenderPresent(app->renderer);
 }
 
 static int IsPointInRect(Sint32 x, Sint32 y, SDL_Rect* rect)

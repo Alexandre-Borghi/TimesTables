@@ -1,4 +1,4 @@
-#include "Slider.h"
+#include "SliderDouble.h"
 #include "App.h"
 
 static float map(float val, float min, float max, float nextMin, float nextMax)

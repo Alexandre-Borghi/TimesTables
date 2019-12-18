@@ -1,5 +1,5 @@
 #include "App.h"
-#include "Slider.h"
+#include "SliderDouble.h"
 #include <SDL2/SDL_ttf.h>
 
 void resetMultApp (App* app)

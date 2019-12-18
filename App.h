@@ -4,7 +4,7 @@
 #include <SDL2/SDL.h>
 
 #include "Button.h"
-#include "Slider.h"
+#include "SliderDouble.h"
 
 #define PI     3.141592653
 #define TWO_PI 6.283185306

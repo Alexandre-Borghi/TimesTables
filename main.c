@@ -46,9 +46,9 @@ int main (int argc, char* args[])
                 EventButton(&app->buttons[i], &event);
             }
 
-            for (int i = 0; i < SLIDER_COUNT; i++)
+            for (int i = 0; i < SLIDER_DOUBLE_COUNT; i++)
             {
-                EventSlider(&app->sliders[i], &event);
+                EventSlider(&app->slidersDouble[i], &event);
             }
         }
 
@@ -62,7 +62,7 @@ int main (int argc, char* args[])
         // Updating the window
         SDL_RenderPresent(app->renderer);
 
-        app->mult += 0.0005;
+        app->mult += app->speed;
     }
 
     DestroyApp(app);

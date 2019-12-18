@@ -63,7 +63,7 @@ void CreateButton (
 
 void DrawButton (App* app, Button* button)
 {
-    // TODO: Callback function
+    // Callback function
 
     if (button->callCallback == 1)
     {

@@ -7,6 +7,38 @@ void resetMultApp (App* app)
     app->mult = 2.;
 }
 
+static SDL_Texture* textureFromText (App* app, char* text, int fontSize, SDL_Color textColor)
+{
+    TTF_Font* font = TTF_OpenFont("./font.ttf", fontSize);
+
+    if (!font)
+        printf("Error with font : %s\n", TTF_GetError());
+
+    SDL_Surface* surface = TTF_RenderText_Solid(font, text, textColor);
+    SDL_Texture* textTexture = SDL_CreateTextureFromSurface(app->renderer, surface);
+
+    SDL_FreeSurface(surface);
+    TTF_CloseFont(font);
+
+    return textTexture;
+}
+
+static SDL_Rect getTextureRect (SDL_Texture* texture, int x, int y)
+{
+    int texW = 0;
+    int texH = 0;
+    
+    SDL_QueryTexture(texture, NULL, NULL, &texW, &texH);
+    
+    SDL_Rect textRect;
+    textRect.w = texW;
+    textRect.h = texH;
+    textRect.x = x;
+    textRect.y = y;
+
+    return textRect;
+}
+
 void CreateApp (App* app, char* title, int wW, int wH, int fW, int fH, int nbPoints_, double mult_)
 {
     /*
@@ -30,6 +62,7 @@ void CreateApp (App* app, char* title, int wW, int wH, int fW, int fH, int nbPoi
 
     app->nbPoints = nbPoints_;
     app->mult = mult_;
+    app->speed = 0.0005;
 
     // SDL2 and Window intialization
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -58,18 +91,39 @@ void CreateApp (App* app, char* title, int wW, int wH, int fW, int fH, int nbPoi
 
     // GUI Creation
 
+    SDL_Color black = { 0, 0, 0, 255 };
+    SDL_Color white = { 255, 255, 255, 255 };
+
     SDL_Color borderColor = { 245, 245, 245, 255 };
     SDL_Color fillColor = { 120, 120, 120, 255 };
     SDL_Color hoverColor = { 190, 190, 190, 255 };
     SDL_Color pressColor = { 230, 230, 230, 255 };
     SDL_Color barColor = { 250, 250, 250, 255 };
-    SDL_Color textColor = { 0, 0, 0, 255 };
 
     app->buttons = calloc(BUTTON_COUNT, sizeof(Button));
-    app->sliders = calloc(SLIDER_COUNT, sizeof(SliderDouble));
+    app->slidersDouble = calloc(SLIDER_DOUBLE_COUNT, sizeof(SliderDouble));
 
-    CreateButton(app, &app->buttons[0], 800, 50, 430, 50, "Reset", borderColor, fillColor, hoverColor, pressColor, textColor, &resetMultApp);
-    CreateSliderDouble(&app->sliders[0], 800, 150, 430, 20, 2, 100, &app->mult, barColor, fillColor, hoverColor, pressColor);
+    app->titleTexture = textureFromText(app, "Times Tables Drawing", 40, white);
+    app->titleRect = getTextureRect(app->titleTexture, 750, 25);
+
+    app->speedTexture = textureFromText(app, "Speed", 30, white);
+    app->speedRect = getTextureRect(app->speedTexture, app->titleRect.x,
+        app->titleRect.y + app->titleRect.h + 20);
+    
+    app->multiplierTexture = textureFromText(app, "Multiplier", 30, white);
+    app->multiplierRect = getTextureRect(app->multiplierTexture, app->titleRect.x,
+        app->speedRect.y + app->speedRect.h + 20);
+    
+    CreateSliderDouble(&app->slidersDouble[0], app->speedRect.x + app->speedRect.w + 20,
+    app->speedRect.y + 10,
+    app->windowedWidth - 20 - (app->speedRect.x + app->speedRect.w + 20), 20, -0.001, 0.001, &app->speed, barColor, fillColor, hoverColor, pressColor);
+
+    CreateSliderDouble(&app->slidersDouble[1], app->multiplierRect.x + app->multiplierRect.w + 20,
+    app->multiplierRect.y + 10,
+    app->windowedWidth - 20 - (app->multiplierRect.x + app->multiplierRect.w + 20), 20, 0, app->nbPoints, &app->mult, barColor, fillColor, hoverColor, pressColor);
+    
+    
+    CreateButton(app, &app->buttons[0], 800, 500, 430, 50, "Reset", borderColor, fillColor, hoverColor, pressColor, black, &resetMultApp);
 }
 
 void DrawApp (App* app)
@@ -119,15 +173,19 @@ void DrawApp (App* app)
 
     // GUI Drawing
 
-    for (int i = 0; i < SLIDER_COUNT; i++)
+    for (int i = 0; i < SLIDER_DOUBLE_COUNT; i++)
     {
-        DrawSlider(app, &(app->sliders[i]));
+        DrawSlider(app, &app->slidersDouble[i]);
     }
 
     for (int i = 0; i < BUTTON_COUNT; i++)
     {
-        DrawButton(app, &(app->buttons[i]));
+        DrawButton(app, &app->buttons[i]);
     }
+
+    SDL_RenderCopy(app->renderer, app->titleTexture, NULL, &app->titleRect);
+    SDL_RenderCopy(app->renderer, app->speedTexture, NULL, &app->speedRect);
+    SDL_RenderCopy(app->renderer, app->multiplierTexture, NULL, &app->multiplierRect);
 }
 
 void DestroyApp (App* app)
@@ -138,6 +196,10 @@ void DestroyApp (App* app)
     }
 
     free(app->buttons);
+
+    SDL_DestroyTexture(app->titleTexture);
+    SDL_DestroyTexture(app->speedTexture);
+    SDL_DestroyTexture(app->multiplierTexture);
 
     SDL_DestroyRenderer(app->renderer);
     SDL_DestroyWindow(app->window);

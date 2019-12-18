@@ -1,5 +1,5 @@
-#ifndef SIDEBAR_H
-#define SIDEBAR_H
+#ifndef SLIDER_DOUBLE_H
+#define SLIDER_DOUBLE_H
 
 #include <SDL2/SDL.h>
 
@@ -18,6 +18,8 @@ typedef struct SliderDouble
     int isHovered;
     int isPressed;
     int callCallback;
+
+    int xOffsetWhenGrabbed; // The difference in x between the mouse and the handle
     
     double minVal;
     double maxVal;
@@ -31,7 +33,7 @@ void CreateSliderDouble(
     SDL_Color barColor_,
     SDL_Color fillColor_, SDL_Color hoverColor_, SDL_Color pressColor
     );
-void DrawSlider(App* app, SliderDouble* s);
-void EventSlider (SliderDouble* s, SDL_Event* e);
+void DrawSliderDouble (App* app, SliderDouble* s);
+void EventSliderDouble (SliderDouble* s, SDL_Event* e);
 
 #endif

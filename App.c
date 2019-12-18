@@ -7,6 +7,11 @@ void resetMultApp (App* app)
     app->mult = 2.;
 }
 
+void setSpeedToZero (App* app)
+{
+    app->speed = 0;
+}
+
 static SDL_Texture* textureFromText (App* app, char* text, int fontSize, SDL_Color textColor)
 {
     TTF_Font* font = TTF_OpenFont("./font.ttf", fontSize);
@@ -102,6 +107,7 @@ void CreateApp (App* app, char* title, int wW, int wH, int fW, int fH, int nbPoi
 
     app->buttons = calloc(BUTTON_COUNT, sizeof(Button));
     app->slidersDouble = calloc(SLIDER_DOUBLE_COUNT, sizeof(SliderDouble));
+    app->slidersInt = calloc(SLIDER_INT_COUNT, sizeof(SliderInt));
 
     app->titleTexture = textureFromText(app, "Times Tables Drawing", 40, white);
     app->titleRect = getTextureRect(app->titleTexture, 750, 25);
@@ -114,16 +120,24 @@ void CreateApp (App* app, char* title, int wW, int wH, int fW, int fH, int nbPoi
     app->multiplierRect = getTextureRect(app->multiplierTexture, app->titleRect.x,
         app->speedRect.y + app->speedRect.h + 20);
     
+    app->nbPointsTexture = textureFromText(app, "Number of points", 25, white);
+    app->nbPointsRect = getTextureRect(app->nbPointsTexture, app->titleRect.x,
+        app->multiplierRect.y + app->multiplierRect.h + 20);
+    
     CreateSliderDouble(&app->slidersDouble[0], app->speedRect.x + app->speedRect.w + 20,
-    app->speedRect.y + 10,
+    (app->speedRect.y + app->speedRect.h / 2) - 10,
     app->windowedWidth - 20 - (app->speedRect.x + app->speedRect.w + 20), 20, -0.001, 0.001, &app->speed, barColor, fillColor, hoverColor, pressColor);
 
     CreateSliderDouble(&app->slidersDouble[1], app->multiplierRect.x + app->multiplierRect.w + 20,
-    app->multiplierRect.y + 10,
+    (app->multiplierRect.y + app->multiplierRect.h / 2) - 10,
     app->windowedWidth - 20 - (app->multiplierRect.x + app->multiplierRect.w + 20), 20, 0, app->nbPoints, &app->mult, barColor, fillColor, hoverColor, pressColor);
     
-    
-    CreateButton(app, &app->buttons[0], 800, 500, 430, 50, "Reset", borderColor, fillColor, hoverColor, pressColor, black, &resetMultApp);
+    CreateSliderInt(&app->slidersInt[0], app->nbPointsRect.x + app->nbPointsRect.w + 20,
+    (app->nbPointsRect.y + app->nbPointsRect.h / 2) - 10,
+    app->windowedWidth - 20 - (app->nbPointsRect.x + app->nbPointsRect.w + 20), 20, 0, 1000, &app->nbPoints, barColor, fillColor, hoverColor, pressColor);
+
+    CreateButton(app, &app->buttons[0], app->titleRect.x, app->nbPointsRect.y + app->nbPointsRect.h + 20,
+    app->windowedWidth - 20 - app->titleRect.x, 50, "Pause", borderColor, fillColor, hoverColor, pressColor, black, &setSpeedToZero);
 }
 
 void DrawApp (App* app)
@@ -175,7 +189,12 @@ void DrawApp (App* app)
 
     for (int i = 0; i < SLIDER_DOUBLE_COUNT; i++)
     {
-        DrawSlider(app, &app->slidersDouble[i]);
+        DrawSliderDouble(app, &app->slidersDouble[i]);
+    }
+
+    for (int i = 0; i < SLIDER_INT_COUNT; i++)
+    {
+        DrawSliderInt(app, &app->slidersInt[i]);
     }
 
     for (int i = 0; i < BUTTON_COUNT; i++)
@@ -186,6 +205,7 @@ void DrawApp (App* app)
     SDL_RenderCopy(app->renderer, app->titleTexture, NULL, &app->titleRect);
     SDL_RenderCopy(app->renderer, app->speedTexture, NULL, &app->speedRect);
     SDL_RenderCopy(app->renderer, app->multiplierTexture, NULL, &app->multiplierRect);
+    SDL_RenderCopy(app->renderer, app->nbPointsTexture, NULL, &app->nbPointsRect);
 }
 
 void DestroyApp (App* app)

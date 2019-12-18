@@ -1,12 +1,12 @@
-#include "SliderDouble.h"
+#include "SliderInt.h"
 #include "App.h"
 
-static float map(float val, float min, float max, float nextMin, float nextMax)
+static int map(float val, float min, float max, float nextMin, float nextMax)
 {
     return (((val - min) / (max - min)) * (nextMax - nextMin)) + nextMin;
 }
 
-static float constrain(float val, float min, float max)
+static int constrain(int val, int min, int max)
 {
     val = val < min ? min : val;
     val = val > max ? max : val;
@@ -14,10 +14,10 @@ static float constrain(float val, float min, float max)
     return val;
 }
 
-void CreateSliderDouble (
-    SliderDouble* s,
+void CreateSliderInt(
+    SliderInt* s,
     int x, int y, int w, int h, 
-    double minVal_, double maxVal_, double* value_,
+    int minVal_, int maxVal_, int* value_,
     SDL_Color barColor_,
     SDL_Color fillColor_, SDL_Color hoverColor_, SDL_Color pressColor_
     )
@@ -48,9 +48,9 @@ void CreateSliderDouble (
     s->xOffsetWhenGrabbed = 0;
 }
 
-void DrawSliderDouble (App* app, SliderDouble* slider)
+void DrawSliderInt(App* app, SliderInt* slider)
 {
-    slider->handle.x = (double)constrain(map(*slider->value, slider->minVal, slider->maxVal, slider->bar.x - slider->handle.w / 2, slider->bar.x + slider->bar.w - slider->handle.w / 2), slider->bar.x - slider->handle.w / 2, slider->bar.x + slider->bar.w - slider->handle.w / 2);
+    slider->handle.x = constrain(map(*slider->value, slider->minVal, slider->maxVal, slider->bar.x - slider->handle.w / 2, slider->bar.x + slider->bar.w - slider->handle.w / 2), slider->bar.x - slider->handle.w / 2, slider->bar.x + slider->bar.w - slider->handle.w / 2);
 
     SDL_Color* bc = &(slider->barColor);
     SDL_Color* fc = &(slider->handleColor);
@@ -84,7 +84,7 @@ static int IsPointInRect(Sint32 x, Sint32 y, SDL_Rect* rect)
     return 0;
 }
 
-void EventSliderDouble (SliderDouble* slider, SDL_Event* e)
+void EventSliderInt (SliderInt* slider, SDL_Event* e)
 {
     // Slider hovered
 

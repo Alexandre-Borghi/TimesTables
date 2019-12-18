@@ -48,7 +48,12 @@ int main (int argc, char* args[])
 
             for (int i = 0; i < SLIDER_DOUBLE_COUNT; i++)
             {
-                EventSlider(&app->slidersDouble[i], &event);
+                EventSliderDouble(&app->slidersDouble[i], &event);
+            }
+
+            for (int i = 0; i < SLIDER_INT_COUNT; i++)
+            {
+                EventSliderInt(&app->slidersInt[i], &event);
             }
         }
 

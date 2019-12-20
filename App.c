@@ -70,6 +70,10 @@ void CreateApp (App* app, char* title, int wW, int wH, int fW, int fH, int nbPoi
     app->speed = 0.0005;
     app->isPaused = 0;
 
+    app->linesRed = 255;
+    app->linesGreen = 255;
+    app->linesBlue = 255;
+
     // SDL2 and Window intialization
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
@@ -99,6 +103,9 @@ void CreateApp (App* app, char* title, int wW, int wH, int fW, int fH, int nbPoi
 
     SDL_Color black = { 0, 0, 0, 255 };
     SDL_Color white = { 255, 255, 255, 255 };
+    SDL_Color red = { 255, 0, 0, 255 };
+    SDL_Color green = { 0, 255, 0, 255 };
+    SDL_Color blue = { 0, 0, 255, 255 };
 
     SDL_Color borderColor = { 245, 245, 245, 255 };
     SDL_Color fillColor = { 120, 120, 120, 255 };
@@ -139,11 +146,39 @@ void CreateApp (App* app, char* title, int wW, int wH, int fW, int fH, int nbPoi
 
     CreateButton(app, &app->buttons[0], app->titleRect.x, app->nbPointsRect.y + app->nbPointsRect.h + 20,
     app->windowedWidth - 20 - app->titleRect.x, 50, "Pause/Play", borderColor, fillColor, hoverColor, pressColor, black, &togglePause);
+
+    app->colorTexture = textureFromText(app, "Color :", 40, white);
+    app->colorRect = getTextureRect(app->colorTexture, app->titleRect.x,
+        app->buttons[0].rect.y + app->buttons[0].rect.h + 40);
+
+    app->redTexture = textureFromText(app, "Red : ", 30, red);
+    app->redRect = getTextureRect(app->redTexture, app->titleRect.x,
+        app->colorRect.y + app->colorRect.h + 20);
+    
+    CreateSliderInt(&app->slidersInt[1], app->redRect.x + app->redRect.w + 20,
+    (app->redRect.y + app->redRect.h / 2) - 10,
+    app->windowedWidth - 20 - (app->redRect.x + app->redRect.w + 20), 20, 0, 255, &app->linesRed, red, fillColor, hoverColor, pressColor);
+
+    app->greenTexture = textureFromText(app, "Green : ", 30, green);
+    app->greenRect = getTextureRect(app->greenTexture, app->titleRect.x,
+        app->redRect.y + app->redRect.h + 20);
+    
+    CreateSliderInt(&app->slidersInt[2], app->greenRect.x + app->greenRect.w + 20,
+    (app->greenRect.y + app->greenRect.h / 2) - 10,
+    app->windowedWidth - 20 - (app->greenRect.x + app->greenRect.w + 20), 20, 0, 255, &app->linesGreen, green, fillColor, hoverColor, pressColor);
+
+    app->blueTexture = textureFromText(app, "Blue : ", 30, blue);
+    app->blueRect = getTextureRect(app->blueTexture, app->titleRect.x,
+        app->greenRect.y + app->greenRect.h + 20);
+    
+    CreateSliderInt(&app->slidersInt[3], app->blueRect.x + app->blueRect.w + 20,
+    (app->blueRect.y + app->blueRect.h / 2) - 10,
+    app->windowedWidth - 20 - (app->blueRect.x + app->blueRect.w + 20), 20, 0, 255, &app->linesBlue, blue, fillColor, hoverColor, pressColor);
 }
 
 void DrawApp (App* app)
 {
-    SDL_SetRenderDrawColor(app->renderer, 255, 255, 255, 20);
+    SDL_SetRenderDrawColor(app->renderer, app->linesRed, app->linesGreen, app->linesBlue, 255);
 
     double xOff = 355;
     double yOff = 355;
@@ -207,6 +242,10 @@ void DrawApp (App* app)
     SDL_RenderCopy(app->renderer, app->speedTexture, NULL, &app->speedRect);
     SDL_RenderCopy(app->renderer, app->multiplierTexture, NULL, &app->multiplierRect);
     SDL_RenderCopy(app->renderer, app->nbPointsTexture, NULL, &app->nbPointsRect);
+    SDL_RenderCopy(app->renderer, app->colorTexture, NULL, &app->colorRect);
+    SDL_RenderCopy(app->renderer, app->redTexture, NULL, &app->redRect);
+    SDL_RenderCopy(app->renderer, app->greenTexture, NULL, &app->greenRect);
+    SDL_RenderCopy(app->renderer, app->blueTexture, NULL, &app->blueRect);
 }
 
 void DestroyApp (App* app)
@@ -221,6 +260,11 @@ void DestroyApp (App* app)
     SDL_DestroyTexture(app->titleTexture);
     SDL_DestroyTexture(app->speedTexture);
     SDL_DestroyTexture(app->multiplierTexture);
+    SDL_DestroyTexture(app->nbPointsTexture);
+    SDL_DestroyTexture(app->colorTexture);
+    SDL_DestroyTexture(app->redTexture);
+    SDL_DestroyTexture(app->greenTexture);
+    SDL_DestroyTexture(app->blueTexture);
 
     SDL_DestroyRenderer(app->renderer);
     SDL_DestroyWindow(app->window);

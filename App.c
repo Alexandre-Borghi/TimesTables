@@ -7,9 +7,9 @@ void resetMultApp (App* app)
     app->mult = 2.;
 }
 
-void setSpeedToZero (App* app)
+void togglePause (App* app)
 {
-    app->speed = 0;
+    app->isPaused = !app->isPaused;
 }
 
 static SDL_Texture* textureFromText (App* app, char* text, int fontSize, SDL_Color textColor)
@@ -68,6 +68,7 @@ void CreateApp (App* app, char* title, int wW, int wH, int fW, int fH, int nbPoi
     app->nbPoints = nbPoints_;
     app->mult = mult_;
     app->speed = 0.0005;
+    app->isPaused = 0;
 
     // SDL2 and Window intialization
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -137,7 +138,7 @@ void CreateApp (App* app, char* title, int wW, int wH, int fW, int fH, int nbPoi
     app->windowedWidth - 20 - (app->nbPointsRect.x + app->nbPointsRect.w + 20), 20, 0, 1000, &app->nbPoints, barColor, fillColor, hoverColor, pressColor);
 
     CreateButton(app, &app->buttons[0], app->titleRect.x, app->nbPointsRect.y + app->nbPointsRect.h + 20,
-    app->windowedWidth - 20 - app->titleRect.x, 50, "Pause", borderColor, fillColor, hoverColor, pressColor, black, &setSpeedToZero);
+    app->windowedWidth - 20 - app->titleRect.x, 50, "Pause/Play", borderColor, fillColor, hoverColor, pressColor, black, &togglePause);
 }
 
 void DrawApp (App* app)

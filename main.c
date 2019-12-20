@@ -67,7 +67,7 @@ int main (int argc, char* args[])
         // Updating the window
         SDL_RenderPresent(app->renderer);
 
-        app->mult += app->speed;
+        app->mult += app->isPaused ? 0. : app->speed;
     }
 
     DestroyApp(app);

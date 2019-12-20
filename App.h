@@ -33,6 +33,7 @@ typedef struct App
     int nbPoints; // Number of points on the circle
     double mult;
     double speed;
+    int isPaused;
 
     // GUI Variables
 

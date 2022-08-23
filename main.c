@@ -18,17 +18,20 @@ void toggleFullscreen (SDL_Window* window)
 
 int main (int argc, char* args[])
 {
-    App* app = malloc(sizeof(App));
+    printf("[INFO] Starting...\n");
 
+    App* app = malloc(sizeof(App));
     CreateApp(app, "Times Tables Drawing", 1280, 720, 1280, 720, 100, 2);
 
-    int quit = 0;     	
+    printf("[INFO] Created App, entering draw loop...\n");
 
+    int quit = 0;
     while (!quit)
     {
         // Event handling
         SDL_Event event;
 
+        // printf("[INFO] Handling SDL events...\n");
         while (SDL_PollEvent(&event))
         {
             switch (event.type)
@@ -56,10 +59,12 @@ int main (int argc, char* args[])
                 EventSliderInt(&app->slidersInt[i], &event);
             }
         }
+        // printf("[INFO] Finished handling SDL events...\n");
 
         // Clearing window
         SDL_SetRenderDrawColor(app->renderer, 0, 0, 0, 255);
         SDL_RenderClear(app->renderer);
+        // printf("[INFO] Cleared window\n");
         
         // Drawing
         DrawApp(app);

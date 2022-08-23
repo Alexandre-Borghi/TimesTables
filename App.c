@@ -178,6 +178,8 @@ void CreateApp (App* app, char* title, int wW, int wH, int fW, int fH, int nbPoi
 
 void DrawApp (App* app)
 {
+    // printf("[INFO] Drawing app...\n");
+
     SDL_SetRenderDrawColor(app->renderer, app->linesRed, app->linesGreen, app->linesBlue, 255);
 
     double xOff = 355;
@@ -186,7 +188,8 @@ void DrawApp (App* app)
     double r = 700 / 2;
 
     // Drawing the outer circle
-    SDL_Point points[app->nbPoints];
+    // printf("[INFO] Drawing the outer circle...\n");
+    SDL_Point points[app->nbPoints + 1];
 
     for (int i = 0; i <= app->nbPoints; i++)
     {
@@ -205,6 +208,7 @@ void DrawApp (App* app)
     SDL_RenderDrawLines(app->renderer, points, app->nbPoints + 1);
 
     // Drawing the lines inside the circle
+    // printf("[INFO] Drawing lines...\n");
     for (int i = 0; i < app->nbPoints; i++)
     {
         double theta = (TWO_PI / app->nbPoints) * i;
@@ -223,6 +227,7 @@ void DrawApp (App* app)
 
     // GUI Drawing
 
+    // printf("[INFO] Drawing sliders...\n");
     for (int i = 0; i < SLIDER_DOUBLE_COUNT; i++)
     {
         DrawSliderDouble(app, &app->slidersDouble[i]);
@@ -233,11 +238,13 @@ void DrawApp (App* app)
         DrawSliderInt(app, &app->slidersInt[i]);
     }
 
+    // printf("[INFO] Drawing buttons...\n");
     for (int i = 0; i < BUTTON_COUNT; i++)
     {
         DrawButton(app, &app->buttons[i]);
     }
 
+    // printf("[INFO] Rendering textures...\n");
     SDL_RenderCopy(app->renderer, app->titleTexture, NULL, &app->titleRect);
     SDL_RenderCopy(app->renderer, app->speedTexture, NULL, &app->speedRect);
     SDL_RenderCopy(app->renderer, app->multiplierTexture, NULL, &app->multiplierRect);
@@ -246,6 +253,8 @@ void DrawApp (App* app)
     SDL_RenderCopy(app->renderer, app->redTexture, NULL, &app->redRect);
     SDL_RenderCopy(app->renderer, app->greenTexture, NULL, &app->greenRect);
     SDL_RenderCopy(app->renderer, app->blueTexture, NULL, &app->blueRect);
+
+    // printf("[INFO] Finished drawing app\n");
 }
 
 void DestroyApp (App* app)
